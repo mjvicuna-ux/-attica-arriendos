@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,7 +10,12 @@ export default async function Contratos() {
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Contratos</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Contratos</h1>
+        <Link href="/contratos/nuevo" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          + Nuevo Contrato
+        </Link>
+      </div>
       <table className="w-full bg-white rounded shadow">
         <thead className="bg-gray-100">
           <tr>

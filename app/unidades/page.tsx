@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 export default async function Unidades() {
   const { data: unidades } = await supabase
     .from('unidades')
-    .select('*, edificios(nombre)')
+    .select('*')
 
   return (
     <div className="p-8">

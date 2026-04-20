@@ -19,7 +19,8 @@ export default function NuevaUnidad() {
   const [guardando, setGuardando] = useState(false)
 
   useEffect(() => {
-    supabase.from('edificios').select('id, nombre').then(({ data }) => {
+    supabase.from('edificios').select('*').then(({ data, error }) => {
+      console.log('edificios:', data, error)
       if (data) setEdificios(data)
     })
   }, [])
@@ -33,7 +34,8 @@ export default function NuevaUnidad() {
     setGuardando(true)
     setError('')
 
-    const { error } = await supabase.from('unidades').insert({
+    console.log('guardando unidad:', form)
+    const { error, data } = await supabase.from('unidades').insert({
       edificio_id: Number(form.edificio_id),
       numero: form.numero,
       tipo: form.tipo,
@@ -42,6 +44,7 @@ export default function NuevaUnidad() {
       estado: form.estado,
     })
 
+    console.log('resultado:', data, error)
     if (error) {
       setError(`Error: ${error.message}`)
     } else {
