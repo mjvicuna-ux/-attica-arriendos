@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase'
 
 export default async function Home() {
   const { data: edificios } = await supabase.from('edificios').select('*')
-  
+
   return (
     <main className="p-8">
       <h1 className="text-3xl font-bold mb-6">Attica Arriendos</h1>
