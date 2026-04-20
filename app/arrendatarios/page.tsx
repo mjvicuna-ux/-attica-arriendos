@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,6 +10,9 @@ export default async function Arrendatarios() {
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Arrendatarios</h1>
+        <Link href="/arrendatarios/nuevo" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          + Nuevo Arrendatario
+        </Link>
       </div>
       <table className="w-full bg-white rounded shadow">
         <thead className="bg-gray-100">
@@ -29,10 +33,13 @@ export default async function Arrendatarios() {
           )}
           {arrendatarios?.map((a) => (
             <tr key={a.id} className="border-t">
-              <td className="p-4">{a.nombre} {a.apellido}</td>
+              <td className="p-4">
+                {a.tipo === 'sociedad' ? a.razon_social : `${a.nombre} ${a.apellido}`}
+                <span className="ml-2 text-xs text-gray-400">{a.tipo === 'sociedad' ? 'Empresa' : 'Persona'}</span>
+              </td>
               <td className="p-4">{a.rut}</td>
-              <td className="p-4">{a.email}</td>
-              <td className="p-4">{a.telefono}</td>
+              <td className="p-4">{a.tipo === 'sociedad' ? a.email_contacto : a.email}</td>
+              <td className="p-4">{a.tipo === 'sociedad' ? a.telefono_contacto : a.telefono}</td>
             </tr>
           ))}
         </tbody>
