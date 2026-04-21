@@ -27,8 +27,7 @@ function etiqueta(dias: number) {
 export default async function Calendario() {
   const { data: contratos } = await supabase
     .from('contratos')
-    .select('*')
-    .neq('estado', 'vencido')
+    .select('*, unidades(numero, tipo), arrendatarios(nombre, apellido, razon_social, tipo)')
     .order('fecha_termino', { ascending: true })
 
   const vencidos = contratos?.filter(c => diasRestantes(c.fecha_termino) < 0) ?? []
@@ -68,8 +67,12 @@ export default async function Calendario() {
           return (
             <div key={c.id} className={`border rounded p-4 flex justify-between items-center ${colorAlerta(dias)}`}>
               <div>
-                <p className="font-semibold">Contrato #{c.id}</p>
-                <p className="text-sm">Unidad #{c.unidad_id} — Arrendatario #{c.arrendatario_id}</p>
+                <p className="font-semibold">
+                {c.arrendatarios?.tipo === 'sociedad'
+                  ? c.arrendatarios?.razon_social
+                  : `${c.arrendatarios?.nombre} ${c.arrendatarios?.apellido}`}
+              </p>
+              <p className="text-sm">{c.unidades?.tipo} {c.unidades?.numero}</p>
                 <p className="text-sm">Término: {new Date(c.fecha_termino).toLocaleDateString('es-CL')}</p>
               </div>
               <div className="text-right">
