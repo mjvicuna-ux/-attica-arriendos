@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
@@ -7,7 +8,12 @@ export default async function Home() {
 
   return (
     <main className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Attica Arriendos</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Attica Arriendos</h1>
+        <Link href="/edificios/nuevo" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          + Nuevo Edificio
+        </Link>
+      </div>
       <h2 className="text-xl font-semibold mb-4">Edificios</h2>
       <ul>
         {edificios?.map((e) => (
