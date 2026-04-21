@@ -6,8 +6,9 @@ import { usePathname } from 'next/navigation'
 const links = [
   { href: '/', label: 'Edificios' },
   { href: '/arrendatarios', label: 'Arrendatarios' },
-  { href: '/contratos', label: 'Contratos' },
   { href: '/unidades', label: 'Unidades' },
+  { href: '/contratos', label: 'Contratos' },
+  { href: '/calendario', label: 'Calendario' },
 ]
 
 export default function Sidebar() {
