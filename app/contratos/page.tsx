@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import EliminarContrato from './EliminarContrato'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,12 +26,13 @@ export default async function Contratos() {
             <th className="text-left p-4">Término</th>
             <th className="text-left p-4">Monto</th>
             <th className="text-left p-4">Estado</th>
+            <th className="text-left p-4">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {contratos?.length === 0 && (
             <tr>
-              <td colSpan={6} className="p-4 text-center text-gray-500">
+              <td colSpan={7} className="p-4 text-center text-gray-500">
                 No hay contratos registrados
               </td>
             </tr>
@@ -54,6 +56,10 @@ export default async function Contratos() {
                 }`}>
                   {c.estado}
                 </span>
+              </td>
+              <td className="p-4 flex gap-2">
+                <Link href={`/contratos/${c.id}/editar`} className="text-blue-600 hover:underline text-sm">Editar</Link>
+                <EliminarContrato id={c.id} />
               </td>
             </tr>
           ))}
