@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 export default async function Contratos() {
   const { data: contratos } = await supabase
     .from('contratos')
-    .select('*, unidades(numero), arrendatarios(nombre, apellido)')
+    .select('*')
 
   return (
     <div className="p-8">
@@ -37,8 +37,8 @@ export default async function Contratos() {
           )}
           {contratos?.map((c) => (
             <tr key={c.id} className="border-t">
-              <td className="p-4">{c.arrendatarios?.nombre} {c.arrendatarios?.apellido}</td>
-              <td className="p-4">{c.unidades?.numero}</td>
+              <td className="p-4">Arrendatario #{c.arrendatario_id}</td>
+              <td className="p-4">Unidad #{c.unidad_id}</td>
               <td className="p-4">{c.fecha_inicio}</td>
               <td className="p-4">{c.fecha_termino}</td>
               <td className="p-4">${c.monto_mensual?.toLocaleString('es-CL')}</td>
