@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import EliminarEdificio from './edificios/EliminarEdificio'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,10 +18,16 @@ export default async function Home() {
       <h2 className="text-xl font-semibold mb-4">Edificios</h2>
       <ul>
         {edificios?.map((e) => (
-          <li key={e.id} className="border p-4 mb-2 rounded">
-            <p className="font-bold">{e.nombre}</p>
-            <p>{e.direccion}, {e.ciudad}</p>
-            <p>{e.total_unidades} unidades</p>
+          <li key={e.id} className="border p-4 mb-2 rounded bg-white flex justify-between items-center">
+            <div>
+              <p className="font-bold">{e.nombre}</p>
+              <p className="text-sm text-gray-600">{e.direccion}, {e.ciudad}</p>
+              <p className="text-sm text-gray-600">{e.total_unidades} unidades</p>
+            </div>
+            <div className="flex gap-3">
+              <Link href={`/edificios/${e.id}/editar`} className="text-blue-600 hover:underline text-sm">Editar</Link>
+              <EliminarEdificio id={e.id} />
+            </div>
           </li>
         ))}
       </ul>
