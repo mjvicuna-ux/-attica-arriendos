@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import EliminarUnidad from './EliminarUnidad'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,11 +21,11 @@ export default async function Unidades() {
         <thead className="bg-gray-100">
           <tr>
             <th className="text-left p-4">Número</th>
-            <th className="text-left p-4">Edificio</th>
             <th className="text-left p-4">Tipo</th>
             <th className="text-left p-4">Piso</th>
             <th className="text-left p-4">m²</th>
             <th className="text-left p-4">Estado</th>
+            <th className="text-left p-4">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -38,7 +39,6 @@ export default async function Unidades() {
           {unidades?.map((u) => (
             <tr key={u.id} className="border-t">
               <td className="p-4">{u.numero}</td>
-              <td className="p-4">{u.edificios?.nombre}</td>
               <td className="p-4">{u.tipo}</td>
               <td className="p-4">{u.piso}</td>
               <td className="p-4">{u.metros_cuadrados}</td>
@@ -48,6 +48,12 @@ export default async function Unidades() {
                 }`}>
                   {u.estado}
                 </span>
+              </td>
+              <td className="p-4 flex gap-2">
+                <Link href={`/unidades/${u.id}/editar`} className="text-blue-600 hover:underline text-sm">
+                  Editar
+                </Link>
+                <EliminarUnidad id={u.id} />
               </td>
             </tr>
           ))}
