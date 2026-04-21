@@ -57,7 +57,10 @@ export default async function Contratos() {
                   {c.estado}
                 </span>
               </td>
-              <td className="p-4 flex gap-2">
+              <td className="p-4 flex gap-2 items-center">
+                {c.pdf_url && (
+                  <a href={c.pdf_url} target="_blank" className="text-green-600 hover:underline text-sm">PDF</a>
+                )}
                 <Link href={`/contratos/${c.id}/editar`} className="text-blue-600 hover:underline text-sm">Editar</Link>
                 <EliminarContrato id={c.id} />
               </td>

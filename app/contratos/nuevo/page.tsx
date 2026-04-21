@@ -8,6 +8,7 @@ export default function NuevoContrato() {
   const router = useRouter()
   const [unidades, setUnidades] = useState<any[]>([])
   const [arrendatarios, setArrendatarios] = useState<any[]>([])
+  const [pdf, setPdf] = useState<File | null>(null)
   const [form, setForm] = useState({
     unidad_id: '',
     arrendatario_id: '',
@@ -20,12 +21,10 @@ export default function NuevoContrato() {
   const [guardando, setGuardando] = useState(false)
 
   useEffect(() => {
-    supabase.from('unidades').select('id, numero, tipo').then(({ data, error }) => {
-      console.log('unidades:', data, error)
+    supabase.from('unidades').select('id, numero, tipo').then(({ data }) => {
       if (data) setUnidades(data)
     })
-    supabase.from('arrendatarios').select('id, nombre, apellido, razon_social, tipo').then(({ data, error }) => {
-      console.log('arrendatarios:', data, error)
+    supabase.from('arrendatarios').select('id, nombre, apellido, razon_social, tipo').then(({ data }) => {
       if (data) setArrendatarios(data)
     })
   }, [])
@@ -39,6 +38,24 @@ export default function NuevoContrato() {
     setGuardando(true)
     setError('')
 
+    let pdf_url = null
+
+    if (pdf) {
+      const nombreArchivo = `${Date.now()}_${pdf.name}`
+      const { error: uploadError } = await supabase.storage
+        .from('contratos')
+        .upload(nombreArchivo, pdf)
+
+      if (uploadError) {
+        setError(`Error subiendo PDF: ${uploadError.message}`)
+        setGuardando(false)
+        return
+      }
+
+      const { data: urlData } = supabase.storage.from('contratos').getPublicUrl(nombreArchivo)
+      pdf_url = urlData.publicUrl
+    }
+
     const { error } = await supabase.from('contratos').insert({
       unidad_id: Number(form.unidad_id),
       arrendatario_id: Number(form.arrendatario_id),
@@ -46,6 +63,7 @@ export default function NuevoContrato() {
       fecha_termino: form.fecha_termino,
       monto_mensual: Number(form.monto_mensual),
       estado: form.estado,
+      pdf_url,
     })
 
     if (error) {
@@ -61,7 +79,6 @@ export default function NuevoContrato() {
       <h1 className="text-3xl font-bold mb-6">Nuevo Contrato</h1>
 
       <form onSubmit={handleSubmit} className="bg-white rounded shadow p-6 flex flex-col gap-4">
-
         <div>
           <label className="block text-sm font-medium mb-1">Arrendatario</label>
           <select name="arrendatario_id" value={form.arrendatario_id} onChange={handleChange} className="w-full border p-2 rounded" required>
@@ -79,9 +96,7 @@ export default function NuevoContrato() {
           <select name="unidad_id" value={form.unidad_id} onChange={handleChange} className="w-full border p-2 rounded" required>
             <option value="">Selecciona una unidad</option>
             {unidades.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.tipo} {u.numero}
-              </option>
+              <option key={u.id} value={u.id}>{u.tipo} {u.numero}</option>
             ))}
           </select>
         </div>
@@ -108,6 +123,16 @@ export default function NuevoContrato() {
             <option value="por vencer">Por vencer</option>
             <option value="vencido">Vencido</option>
           </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">PDF del contrato (opcional)</label>
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={(e) => setPdf(e.target.files?.[0] ?? null)}
+            className="w-full border p-2 rounded"
+          />
         </div>
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
