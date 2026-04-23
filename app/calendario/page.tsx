@@ -2,6 +2,10 @@ import { supabase } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
 
+async function actualizarEstados() {
+  await supabase.rpc('actualizar_estados_contratos')
+}
+
 function diasRestantes(fecha: string) {
   const hoy = new Date()
   const termino = new Date(fecha)
@@ -25,6 +29,8 @@ function etiqueta(dias: number) {
 }
 
 export default async function Calendario() {
+  await actualizarEstados()
+
   const { data: contratos } = await supabase
     .from('contratos')
     .select('*, unidades(numero, tipo), arrendatarios(nombre, apellido, razon_social, tipo)')
