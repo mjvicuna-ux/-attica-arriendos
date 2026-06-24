@@ -13,9 +13,14 @@ export default async function Unidades() {
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Unidades</h1>
-        <Link href="/unidades/nueva" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          + Nueva Unidad
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/unidades/importar" className="border border-blue-600 text-blue-600 px-4 py-2 rounded hover:bg-blue-50">
+            Importar Excel
+          </Link>
+          <Link href="/unidades/nueva" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            + Nueva Unidad
+          </Link>
+        </div>
       </div>
       <table className="w-full bg-white rounded shadow">
         <thead className="bg-gray-100">
