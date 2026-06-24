@@ -20,7 +20,7 @@ export async function GET(request: Request) {
       id,
       fecha_termino,
       monto_mensual,
-      unidades (numero, edificios (nombre)),
+      unidades (numero, edificio_id),
       arrendatarios (razon_social, nombre, apellido)
     `)
     .eq('estado', 'vigente')
@@ -36,11 +36,16 @@ export async function GET(request: Request) {
     return NextResponse.json({ message: 'Sin contratos por vencer' })
   }
 
+  const edificioIds = [...new Set(contratos.map((c: any) => c.unidades?.edificio_id).filter(Boolean))]
+  const { data: edificios } = await supabase.from('edificios').select('id, nombre').in('id', edificioIds)
+  const edificioMap = Object.fromEntries((edificios ?? []).map((e: any) => [e.id, e.nombre]))
+
   const filas = contratos.map((c: any) => {
     const termino = new Date(c.fecha_termino)
     const dias = Math.ceil((termino.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24))
     const arrendatario = c.arrendatarios?.razon_social || `${c.arrendatarios?.nombre} ${c.arrendatarios?.apellido}`
-    const unidad = `${c.unidades?.edificios?.nombre} - Unidad ${c.unidades?.numero}`
+    const nombreEdificio = edificioMap[c.unidades?.edificio_id] ?? ''
+    const unidad = `${nombreEdificio} - Unidad ${c.unidades?.numero}`
     return `<tr>
       <td style="padding:8px;border-bottom:1px solid #eee">${arrendatario}</td>
       <td style="padding:8px;border-bottom:1px solid #eee">${unidad}</td>
